@@ -42,7 +42,11 @@ class VueCreationProjet
                                     <option value="">Selectionnez un semestre</option>
                                     <option value="1">Semestre 1</option>
                                     <option value="2">Semestre 2</option>
-                                </select>
+                                    <option value="2">Semestre 3</option>
+                                    <option value="2">Semestre 4</option>
+                                    <option value="2">Semestre 5</option>
+                                    <option value="2">Semestre 6</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>

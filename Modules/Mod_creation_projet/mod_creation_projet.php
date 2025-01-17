@@ -6,7 +6,6 @@ class ModCreationProjet {
 
     public function __construct() {
         $this->controleur = new ContCreationProjet();
-        // Affiche le formulaire au chargement du module
         $this->controleur->afficherFormulaire();
 
 
