@@ -12,8 +12,11 @@ class ContProjets {
     }
 
     public function listeProjets() {
+        session_start();
         $projets = $this->modele->getProjets();
-        $this->vue->afficherListeProjets($projets);
+        $isEnseignant = isset($_SESSION['id_utilisateur']) ? 
+        $this->modele->isEnseignant($_SESSION['id_utilisateur']) : false;
+        $this->vue->afficherListeProjets($projets, $isEnseignant);
     }
 }
 ?>

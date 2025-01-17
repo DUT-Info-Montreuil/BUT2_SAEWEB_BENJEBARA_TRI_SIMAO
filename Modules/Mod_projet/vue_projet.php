@@ -3,7 +3,7 @@ class VueProjet {
 
     public function __construct() {}
 
-    public function afficherDetailsProjet($projet) {
+    public function afficherDetailsProjet($projet, $isEnseignant) {
         ?>
         <!DOCTYPE html>
         <html lang="fr">
@@ -29,7 +29,10 @@ class VueProjet {
 
                         <footer class="card-footer">
                             <a href="index.php" class="card-footer-item">Retour à la liste</a>
+                    <?php if ($isEnseignant): ?>
+
                             <a href="edit.php?id=<?php echo $projet['id_projet']; ?>" class="card-footer-item">Modifier le projet</a>
+                        <?php endif; ?>
                         </footer>
                     </div>
                 </div>

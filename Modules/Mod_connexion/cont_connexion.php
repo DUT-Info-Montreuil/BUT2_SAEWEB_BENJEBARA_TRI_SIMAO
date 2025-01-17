@@ -1,44 +1,42 @@
 <?php
 require_once 'modele_connexion.php';
 require_once 'vue_connexion.php';
-require_once 'connexion.php';
 
 class ContConnexion {
     private $modele;
     private $vue;
 
-    public function __construct(){
-        $this->modele = new ModeleConnexion(); 
+    public function __construct() {
+        $this->modele = new ModeleConnexion();
         $this->vue = new VueConnexion();
-        $this->ouAller();
+        session_start();
     }
 
-    public function ouAller() {
-        switch ($_GET['truc']) {
-            case "redirect":
-                $this->vue->connecte();
-                break;
-            
-            default:
-                # code...
-                break;
+    public function form() {
+        if (isset($_SESSION['id_utilisateur'])) {
+            header("Location: index.php?module=projets");
+            exit();
         }
-    }
-
-    public function form(){
         $this->vue->form_inscription();
     }
 
     public function ajout_data() {
-        if (isset($_POST['id_utilisateur'], $_POST['mot_de_pass'])) {
+        if (isset($_POST['email'], $_POST['passwd'])) {
+            $email = htmlspecialchars($_POST['email']);
+            $passwd = $_POST['passwd'];
             
-            $id = $_POST['id_utilisateur'];
-            $passwd = $_POST['mot_de_pass'];
-            $this->modele->ajouter_util($id, $passwd);
+            $user_id = $this->modele->verifierConnexion($email, $passwd);
             
-            $this->vue->confirmation_ajout();
-
-        }    
+            #$this->modele->hashAllPasswords();
+            if ($user_id) {
+                $_SESSION['id_utilisateur'] = $user_id;
+                $_SESSION['email'] = $email;
+                header("Location: index.php?module=projets");
+                exit();
+            } else {
+                $this->vue->afficherErreur("Email ou mot de passe incorrect");
+            }
+        }
     }
 }
 ?>

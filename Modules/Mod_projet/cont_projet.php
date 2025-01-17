@@ -13,8 +13,10 @@ class ContProjet {
 
     public function afficherProjet($idProjet) {
         $projet = $this->modele->getProjet($idProjet);
+        $isEnseignant = isset($_SESSION['id_utilisateur']) ? 
+        $this->modele->isEnseignant($_SESSION['id_utilisateur']) : false;
         if ($projet) {
-            $this->vue->afficherDetailsProjet($projet);
+            $this->vue->afficherDetailsProjet($projet, $isEnseignant);
         } else {
             $this->vue->afficherErreur("Projet non trouvé.");
         }

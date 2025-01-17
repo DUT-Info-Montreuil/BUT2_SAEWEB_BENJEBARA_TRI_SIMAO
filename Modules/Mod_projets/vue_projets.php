@@ -3,7 +3,7 @@ class VueProjets {
 
     public function __construct() {}
 
-    public function afficherListeProjets($projets) {
+    public function afficherListeProjets($projets, $isEnseignant) {
         ?>
         <!DOCTYPE html>
         <html lang="fr">
@@ -52,6 +52,7 @@ class VueProjets {
         <!-- Navigation -->
         <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
+                <a class="navbar-item" href="index.php?module=deconnexion" >Deconnexion</a>
                 <a class="navbar-item" href="#">Projets</a>
                 <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
                     <span aria-hidden="true"></span>
@@ -67,12 +68,14 @@ class VueProjets {
                 <div class="container has-text-centered">
                     <h1 class="title">Bienvenue dans la Liste des Projets</h1>
                     <h2 class="subtitle">Explorez les projets, gérez-les, ou créez-en de nouveaux.</h2>
-                    <a href="index.php?module=creation_projet" class="button is-primary is-large">
-                        <span class="icon">
-                            <i class="fas fa-plus-circle"></i>
-                        </span>
-                        <span>Créer un nouveau projet</span>
-                    </a>
+                    <?php if ($isEnseignant): ?>
+                        <a href="index.php?module=creation_projet" class="button is-primary is-large">
+                            <span class="icon">
+                                <i class="fas fa-plus-circle"></i>
+                            </span>
+                            <span>Créer un nouveau projet</span>
+                        </a>
+                    <?php endif; ?>
                 </div>
             </div>
         </section>
@@ -108,6 +111,7 @@ class VueProjets {
                                             </span>
                                             Voir
                                         </a>
+                                        <?php if ($isEnseignant): ?>
                                         <a href="edit.php?id=<?php echo $projet['id_projet']; ?>" class="card-footer-item has-text-warning">
                                             <span class="icon">
                                                 <i class="fas fa-edit"></i>
@@ -120,6 +124,8 @@ class VueProjets {
                                             </span>
                                             Supprimer
                                         </a>
+                                    <?php endif; ?>
+
                                     </footer>
                                 </div>
                             </div>
