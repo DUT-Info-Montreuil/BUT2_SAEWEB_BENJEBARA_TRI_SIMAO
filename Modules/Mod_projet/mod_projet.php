@@ -7,19 +7,22 @@ class ModProjet {
     public function __construct() {
         $this->controleur = new ContProjet();
 
-        $action = isset($_GET['action']) ? $_GET['action'] : '';
+        $action = isset($_GET['action']) ? $_GET['action'] : 'liste';
         $idProjet = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
         switch ($action) {
+            case 'liste':
+                $this->controleur->listeProjets();
+                break;
             case 'view':
-                if ($idProjet > 0) {
-                    $this->controleur->afficherProjet($idProjet);
+                if (isset($_GET['id'])) {
+                    $this->controleur->voirProjet($idProjet);
                 } else {
-                    echo "ID du projet invalide.";
+                    echo "ID du projet non spécifié.";
                 }
                 break;
             default:
-                echo "Action non reconnue.";
+                echo "Action invalide.";
                 break;
         }
     }

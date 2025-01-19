@@ -196,6 +196,9 @@ class VueProjets {
             .column:nth-child(3) {
               animation-delay: 0.4s;
             }
+            .card{
+                margin: 1rem;
+            }
             </style>
         </head>
         <body>
@@ -242,7 +245,7 @@ class VueProjets {
                                         <div class="content">
                                             <p><strong>Description :</strong> <?php echo htmlspecialchars($projet['description']); ?></p>
                                             <p><strong>Semestre :</strong> <?php echo htmlspecialchars($projet['semestre']); ?></p>
-                                            <p><strong>Année :</strong> <?php echo htmlspecialchars($projet['annee']); ?></p>
+                                          <!--  <p><strong>Année :</strong> <?php echo htmlspecialchars($projet['annee']); ?></p> -->
                                         </div>
                                     </div>
                                     <footer class="card-footer">
@@ -253,17 +256,11 @@ class VueProjets {
                                             Voir
                                         </a>
                                         <?php if ($isEnseignant): ?>
-                                        <a href="edit.php?id=<?php echo $projet['id_projet']; ?>" class="card-footer-item has-text-warning">
-                                            <span class="icon">
-                                                <i class="fas fa-edit"></i>
-                                            </span>
-                                            Modifier
-                                        </a>
                                         <a href="index.php?module=edit_projet&id=<?php echo $projet['id_projet']; ?>" class="card-footer-item has-text-warning">
                                             <span class="icon">
                                                 <i class="fas fa-edit"></i>
                                             </span>
-                                            ModifierVRAU
+                                            Modifier
                                             </a>
                                         <a href="delete.php?id=<?php echo $projet['id_projet']; ?>" class="card-footer-item has-text-danger" onclick="return confirm('Voulez-vous vraiment supprimer ce projet ?');">
                                             <span class="icon">
