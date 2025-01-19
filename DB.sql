@@ -19,12 +19,19 @@ CREATE TABLE enseignant (
     id_utilisateur INT,
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur)
 );
-
+-- Table Semestre
+DROP TABLE IF EXISTS semestre;
+CREATE TABLE semestre (
+    id_semestre INT PRIMARY KEY,
+    type VARCHAR(50)
+);
 -- Table Etudiant
 DROP TABLE IF EXISTS etudiant;
 CREATE TABLE etudiant (
     id_etudiant INT AUTO_INCREMENT PRIMARY KEY,
     id_utilisateur INT,
+    semestre_utilisateur INT,
+    FOREIGN KEY (semestre_utilisateur) REFERENCES semestre(id_semestre),
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur)
 );
 
@@ -36,12 +43,7 @@ CREATE TABLE annee (
     fin_annee DATE
 );
 
--- Table Semestre
-DROP TABLE IF EXISTS semestre;
-CREATE TABLE semestre (
-    id_semestre INT PRIMARY KEY,
-    type VARCHAR(50)
-);
+
 
 -- Table Projet
 DROP TABLE IF EXISTS projet;
@@ -134,7 +136,7 @@ CREATE TABLE evaluation (
 DROP TABLE IF EXISTS note;
 CREATE TABLE note (
     id_note INT AUTO_INCREMENT PRIMARY KEY,
-    note DECIMAL(4, 2), -- Augmentation de la précision pour les notes
+    note DECIMAL(4, 2),
     id_evaluation INT,
     id_etudiant INT,
     id_groupe INT,

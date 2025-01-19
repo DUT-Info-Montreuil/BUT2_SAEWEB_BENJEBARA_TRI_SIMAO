@@ -5,7 +5,8 @@ class VueCreationProjet
 
     public function afficherFormulaireCreation()
     {
-?>
+        afficherHeader("Liste des projets");
+        ?>
         <!DOCTYPE html>
         <html lang="fr">
 
@@ -38,7 +39,7 @@ class VueCreationProjet
                             <label class="label">Semestre</label>
                             <div class="control">
                                 <div class="select">
-                                <select name="id_semestre" required>
+                                <select name="id_semestre" >
                                     <option value="">Selectionnez un semestre</option>
                                     <option value="1">Semestre 1</option>
                                     <option value="2">Semestre 2</option>
@@ -56,8 +57,8 @@ class VueCreationProjet
                                 <div class="select">
                                 <select name="id_annee" required>
                                     <option value="">Selectionnez une année</option>
-                                    <option value="1">2023-2024</option>
-                                    <option value="2">2024-2025</option>
+                                    <option value="2023">2022</option>
+                                    <option value="2024">2023</option>
                                 </select>
                                 </div>
                             </div>
@@ -75,6 +76,7 @@ class VueCreationProjet
 
         </html>
 <?php
+        afficherFooter();
     }
 
     public function afficherErreur($message)

@@ -10,6 +10,9 @@ class ModeleCreationProjet extends Connexion
     public function creerProjet($nom, $description, $id_semestre, $id_annee)
     {
         try {
+            //consol lgo
+            error_log("Création du projet : $nom, $description, $id_semestre, $id_annee");
+            
             $query = "INSERT INTO projet (nom, description, id_semestre, id_annee) VALUES (:nom, :description, :id_semestre, :id_annee)";
             $stmt = self::$bdd->prepare($query);
             return $stmt->execute([

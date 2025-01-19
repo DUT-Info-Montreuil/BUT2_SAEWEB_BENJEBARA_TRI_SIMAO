@@ -4,6 +4,7 @@ class VueProjet {
     public function __construct() {}
 
     public function afficherDetailsProjet($projet, $isEnseignant) {
+        afficherHeader("Liste des projets");
         ?>
         <!DOCTYPE html>
         <html lang="fr">
@@ -40,6 +41,7 @@ class VueProjet {
         </body>
         </html>
         <?php
+        afficherFooter();
     }
 
     public function afficherErreur($message) {

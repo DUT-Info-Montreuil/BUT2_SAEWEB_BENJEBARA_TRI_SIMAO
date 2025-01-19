@@ -7,9 +7,9 @@
 
     public static function initConnexion() {
         $host = 'localhost';
-        $dbname = 'sae'; // Remplacez par le nom de votre base de données
-        $user = 'root'; // Utilisateur par défaut sur XAMPP
-        $pass = 'chocolat'; // Mot de passe vide par défaut sur XAMPP
+        $dbname = 'sae';
+        $user = 'root';
+        $pass = '';
 
         try {
             self::$bdd = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);

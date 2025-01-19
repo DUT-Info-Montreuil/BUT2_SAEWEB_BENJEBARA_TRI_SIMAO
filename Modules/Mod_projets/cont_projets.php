@@ -13,7 +13,8 @@ class ContProjets {
 
     public function listeProjets() {
         session_start();
-        $projets = $this->modele->getProjets();
+        $id_utilisateur = isset($_SESSION['id_utilisateur']) ? $_SESSION['id_utilisateur'] : null;
+        $projets = $this->modele->getProjets($id_utilisateur); // Passe l'ID utilisateur au modèle
         $isEnseignant = isset($_SESSION['id_utilisateur']) ? 
         $this->modele->isEnseignant($_SESSION['id_utilisateur']) : false;
         $this->vue->afficherListeProjets($projets, $isEnseignant);
