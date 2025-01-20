@@ -27,7 +27,6 @@ class ContConnexion {
             
             $user_id = $this->modele->verifierConnexion($email, $passwd);
             
-            #$this->modele->hashAllPasswords();
             if ($user_id) {
                 $_SESSION['id_utilisateur'] = $user_id;
                 $_SESSION['email'] = $email;
@@ -37,6 +36,9 @@ class ContConnexion {
                 $this->vue->afficherErreur("Email ou mot de passe incorrect");
             }
         }
+    }
+    public function hashAllPasswords() {
+        $this->modele->hashAllPasswords();
     }
 }
 ?>

@@ -28,13 +28,17 @@ class ModeleConnexion extends Connexion {
             $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($users as $user) {
-                $hashedPassword = password_hash($user['mot_de_pass'], PASSWORD_DEFAULT);
+                if (password_get_info($user['mot_de_pass'])['algo'] == 0) {
+                    $hashedPassword = password_hash($user['mot_de_pass'], PASSWORD_DEFAULT);
                 $updateQuery = "UPDATE utilisateur SET mot_de_pass = :password WHERE id_utilisateur = :id";
                 $updateStmt = self::$bdd->prepare($updateQuery);
                 $updateStmt->execute([
                     ':password' => $hashedPassword,
                     ':id' => $user['id_utilisateur']
                 ]);
+                }
+                
+                
             }
             echo "Tous les mots de passe ont été hashés avec succès.";
         } catch (Exception $e) {

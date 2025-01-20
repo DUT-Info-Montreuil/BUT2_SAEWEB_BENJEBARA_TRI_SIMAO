@@ -7,9 +7,8 @@ class VueEditProjet {
 
     public function __construct() {}
 
-    public function afficherFormulaireEdition($projet, $ressources, $rendus, $soutenances,$groupes) {
-afficherHeader("Liste des projets");
-
+    public function afficherFormulaireEdition($projet, $ressources, $rendus, $soutenances, $groupes, $etudiants, $notes) {
+        afficherHeader("Liste des projets");
         ?>
         <!DOCTYPE html>
         <html lang="fr">
@@ -224,6 +223,168 @@ afficherHeader("Liste des projets");
                   </div>
                 </form>
               </div>
+            </div>
+
+            <!-- Gestion des Groupes et Étudiants -->
+            <div class="card">
+                <div class="card-content">
+                    <h2 class="subtitle">Gestion des Groupes et Étudiants</h2>
+
+                    <!-- Liste des groupes -->
+                    <?php foreach ($groupes as $groupe): ?>
+                        <div class="card">
+                            <div class="card-content">
+                                <h3 class="subtitle">Groupe : <?php echo htmlspecialchars($groupe['nom']); ?></h3>
+                                <ul>
+                                    <?php
+                                    $etudiants_du_groupe = array_filter($etudiants, function($e) use ($groupe) {
+                                        return $e['id_groupe'] == $groupe['id_groupe'];
+                                    });
+                                    foreach ($etudiants_du_groupe as $etudiant): ?>
+                                        <li><?php echo htmlspecialchars($etudiant['nom_etudiant'] . ' ' . $etudiant['prenom_etudiant']); ?>
+                                            <!-- Formulaire pour supprimer un étudiant du groupe -->
+                                            <form action="" method="post" style="display: inline;">
+                                                <input type="hidden" name="action" value="remove_student_from_group">
+                                                <input type="hidden" name="id_etudiant" value="<?php echo $etudiant['id_etudiant']; ?>">
+                                                <input type="hidden" name="id_groupe" value="<?php echo $groupe['id_groupe']; ?>">
+                                                <button class="button is-small is-danger" type="submit">Retirer</button>
+                                            </form>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+
+                                <!-- Formulaire pour ajouter un étudiant au groupe -->
+                                <h4 class="subtitle">Ajouter un étudiant au groupe</h4>
+                                <form action="" method="post">
+                                    <input type="hidden" name="action" value="add_student_to_group">
+                                    <input type="hidden" name="id_groupe" value="<?php echo $groupe['id_groupe']; ?>">
+                                    <div class="field">
+                                        <label class="label">Étudiant</label>
+                                        <div class="control">
+                                            <div class="select">
+                                                <select name="id_etudiant">
+                                                    <?php foreach ($etudiants as $etudiant):
+                                                        if (empty($etudiant['id_groupe'])): ?>
+                                                            <option value="<?php echo $etudiant['id_etudiant']; ?>"><?php echo htmlspecialchars($etudiant['nom_etudiant'] . ' ' . $etudiant['prenom_etudiant']); ?></option>
+                                                        <?php endif;
+                                                    endforeach; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="control">
+                                            <button class="button is-primary" type="submit">Ajouter</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+
+                    <!-- Formulaire pour créer un nouveau groupe -->
+                    <div class="card">
+                        <div class="card-content">
+                            <h3 class="subtitle">Créer un nouveau groupe</h3>
+                            <form action="" method="post">
+                                <input type="hidden" name="action" value="create_group">
+                                <input type="hidden" name="id_projet" value="<?php echo $projet['id_projet']; ?>">
+                                <div class="field">
+                                    <label class="label">Nom du groupe</label>
+                                    <div class="control">
+                                        <input class="input" type="text" name="nom_groupe" required>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="control">
+                                        <button class="button is-primary" type="submit">Créer</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Gestion des Notes -->
+                    <div class="card">
+                        <div class="card-content">
+                            <h2 class="subtitle">Gestion des Notes</h2>
+                            <?php foreach ($etudiants as $etudiant): ?>
+                                <div class="card">
+                                    <div class="card-content">
+                                        <h3 class="subtitle">Étudiant : <?php echo htmlspecialchars($etudiant['nom_etudiant'] . ' ' . $etudiant['prenom_etudiant']); ?></h3>
+                                        <?php
+                                        $notes_etudiant = [];
+                                        if (isset($etudiant['id_etudiant'])) {
+                                           $notes_etudiant = array_filter($notes, function($n) use ($etudiant) {
+                                              return $n['id_etudiant'] == $etudiant['id_etudiant'];
+                                           });
+                                        }
+                                        ?>
+                                        <ul>
+                                          
+                                            <?php
+                                            if (!empty($notes_etudiant)) {
+                                              foreach ($notes_etudiant as $note) {
+                                                  ?>
+                                                  <li>
+                                                      Note : <?php echo htmlspecialchars($note['note']); ?>
+                                                      (Type : <?php echo htmlspecialchars($note['type']); ?>,
+                                                      Coef : <?php echo htmlspecialchars($note['coef']); ?>)
+                                                      <form action="" method="post" style="display: inline;">
+                                                          <input type="hidden" name="action" value="edit_grade">
+                                                          <input type="hidden" name="id_note" value="<?php echo htmlspecialchars($note['id_note']); ?>">
+                                                          <input class="input is-small" type="number" name="new_grade" value="<?php echo htmlspecialchars($note['note']); ?>" required>
+                                                          <button class="button is-small is-warning" type="submit">Modifier</button>
+                                                      </form>
+                                                      <form action="" method="post" style="display: inline;">
+                                                          <input type="hidden" name="action" value="delete_grade">
+                                                          <input type="hidden" name="id_note" value="<?php echo htmlspecialchars($note['id_note']); ?>">
+                                                          <button class="button is-small is-danger" type="submit">Supprimer</button>
+                                                      </form>
+                                                  </li>
+                                                  <?php
+                                              }
+                                          } else {
+                                              echo "<p>Aucune note pour cet étudiant.</p>";
+                                          }
+                                        
+                                             ?>
+                                        </ul>
+                                        <!-- Formulaire pour ajouter une note -->
+                                        <form action="" method="post">
+                                            <input type="hidden" name="action" value="add_grade">
+                                            <input type="hidden" name="id_etudiant" value="<?php echo $etudiant['id_etudiant']; ?>">
+                                            <input type="hidden" name="id_groupe" value="<?php echo $etudiant['id_groupe']; ?>">
+                                            <div class="field">
+                                                <label class="label">Note</label>
+                                                <div class="control">
+                                                    <input class="input" type="number" step="0.01" name="note" required>
+                                                </div>
+                                            </div>
+                                            <div class="field">
+                                                <label class="label">Type d'évaluation</label>
+                                                <div class="control">
+                                                    <input class="input" type="text" name="type_evaluation" required>
+                                                </div>
+                                            </div>
+                                            <div class="field">
+                                                <label class="label">Coefficient</label>
+                                                <div class="control">
+                                                    <input class="input" type="number" step="0.01" name="coef" required>
+                                                </div>
+                                            </div>
+                                            <div class="field">
+                                                <div class="control">
+                                                    <button class="button is-primary" type="submit">Ajouter Note</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         </body>

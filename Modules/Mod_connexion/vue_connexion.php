@@ -33,6 +33,13 @@ class VueConnexion {
                                     </div>
                                 </div>
                             </form>
+                            <form action="index.php?module=connexion&action=hash_passwords" method="post" class="box">
+                                <div class="field">
+                                    <div class="control">
+                                        <button class="button is-warning" type="submit">Hash All Passwords</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
