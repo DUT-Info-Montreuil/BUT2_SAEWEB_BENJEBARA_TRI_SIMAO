@@ -131,14 +131,19 @@ public function removeStudentFromGroup($id_etudiant, $id_groupe) {
 }
 
 public function getStudentGrades($id_etudiant) {
-    $query = "SELECT n.id_note, n.note, e.type, e.coef
+    $query = "SELECT n.id_note, n.note, e.type, e.coef, n.id_etudiant
               FROM note n
               INNER JOIN evaluation e ON n.id_evaluation = e.id_evaluation
               WHERE n.id_etudiant = :id_etudiant";
     $stmt = self::$bdd->prepare($query);
     $stmt->bindParam(':id_etudiant', $id_etudiant, PDO::PARAM_INT);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($stmt->execute()) {
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    } else {
+        return [];
+    }
 }
 
 public function addGrade($id_etudiant, $id_groupe, $note, $type_evaluation, $coef) {
@@ -162,16 +167,29 @@ public function addGrade($id_etudiant, $id_groupe, $note, $type_evaluation, $coe
 public function updateGrade($id_note, $new_grade) {
     $query = "UPDATE note SET note = :new_grade WHERE id_note = :id_note";
     $stmt = self::$bdd->prepare($query);
-    $stmt->bindParam(':new_grade', $new_grade);
+
+    $stmt->bindParam(':new_grade', $new_grade, PDO::PARAM_STR);
     $stmt->bindParam(':id_note', $id_note, PDO::PARAM_INT);
-    $stmt->execute();
+
+    if ($stmt->execute()) {
+        return true;
+    } else {
+        $errorInfo = $stmt->errorInfo();
+        error_log("Error updating grade: " . $errorInfo[2]);
+        return false;
+    }
 }
 
 public function deleteGrade($id_note) {
     $query = "DELETE FROM note WHERE id_note = :id_note";
     $stmt = self::$bdd->prepare($query);
     $stmt->bindParam(':id_note', $id_note, PDO::PARAM_INT);
-    $stmt->execute();
+
+    if ($stmt->execute()) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 public function createGroup($id_projet, $nom_groupe) {

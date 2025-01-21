@@ -13,6 +13,7 @@ class ContEditProjet {
 
     public function editProjet($id_projet) {
         session_start();
+
         $projet = $this->modele->getProjet($id_projet);
         $ressources = $this->modele->getRessources($id_projet);
         $rendus = $this->modele->getRendus($id_projet);
@@ -23,45 +24,51 @@ class ContEditProjet {
         foreach ($etudiants as $etudiant) {
             $notes = array_merge($notes, $this->modele->getStudentGrades($etudiant['id_etudiant']));
         }
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $projet = $this->modele->getProjet($id_projet);
+            $ressources = $this->modele->getRessources($id_projet);
+            $rendus = $this->modele->getRendus($id_projet);
+            $soutenances = $this->modele->getSoutenances($id_projet);
+            $groupes = $this->modele->getGroupesProjet($id_projet);
+            $etudiants = $this->modele->getEtudiantsParSemestre($projet['id_semestre']);
+            $notes = array();
+            foreach ($etudiants as $etudiant) {
+                $notes = array_merge($notes, $this->modele->getStudentGrades($etudiant['id_etudiant']));
+            }
+        }
 
         if (!$projet) {
-            // Gérer l'erreur, par exemple rediriger vers une page d'erreur 404
             $this->vue->afficherErreur("Projet non trouvé");
             return;
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Handle actions (update, delete, etc.)
             if (isset($_POST['action']) && $_POST['action'] === 'update_projet') {
                 $nom = $_POST['nom'];
                 $description = $_POST['description'];
                 $this->modele->updateProjet($id_projet, $nom, $description);
-                $projet['nom'] = $nom; // Mettre à jour pour l'affichage
-                $projet['description'] = $description; // Mettre à jour pour l'affichage
             } elseif (isset($_POST['action']) && $_POST['action'] === 'add_ressource') {
                 $titre = $_POST['titre'];
                 $type = $_POST['type'];
                 $lien = $_POST['lien'];
                 $id_utilisateur = $_SESSION['id_utilisateur'];
                 $id_enseignant = $this->modele->getEnseignantId($id_utilisateur);
-            
+
                 if ($id_enseignant && $this->modele->addRessource($id_enseignant, $titre, $type, $lien)) {
-                    $ressources = $this->modele->getRessources($id_projet); 
-                } else {
+                    $ressources = $this->modele->getRessources($id_projet);
                 }
             } elseif (isset($_POST['action']) && $_POST['action'] === 'add_rendu') {
                 $nom = $_POST['nom'];
                 $description = $_POST['description'];
                 $date_limite = $_POST['date_limite'];
                 $this->modele->addRendu($id_projet, $nom, $description, $date_limite);
-                $rendus = $this->modele->getRendus($id_projet);
             } elseif (isset($_POST['action']) && $_POST['action'] === 'add_soutenance') {
                 $id_groupe = $_POST['id_groupe'];
                 $date_soutenance = $_POST['date_soutenance'];
                 $titre = $_POST['titre'];
                 $this->modele->addSoutenance($id_projet, $id_groupe, $date_soutenance, $titre);
-                $soutenances = $this->modele->getSoutenances($id_projet);
-            }
-            elseif (isset($_POST['action']) && $_POST['action'] === 'add_student_to_group') {
+            } elseif (isset($_POST['action']) && $_POST['action'] === 'add_student_to_group') {
                 $id_etudiant = $_POST['id_etudiant'];
                 $id_groupe = $_POST['id_groupe'];
                 $this->modele->addStudentToGroup($id_etudiant, $id_groupe);
@@ -83,21 +90,25 @@ class ContEditProjet {
             } elseif (isset($_POST['action']) && $_POST['action'] === 'delete_grade') {
                 $id_note = $_POST['id_note'];
                 $this->modele->deleteGrade($id_note);
-            }elseif (isset($_POST['action']) && $_POST['action'] === 'create_group') {
+            } elseif (isset($_POST['action']) && $_POST['action'] === 'create_group') {
                 $id_projet = $_POST['id_projet'];
                 $nom_groupe = $_POST['nom_groupe'];
                 $this->modele->createGroup($id_projet, $nom_groupe);
             }
 
-            
+            // Refetch data after update/delete
             $projet = $this->modele->getProjet($id_projet);
             $ressources = $this->modele->getRessources($id_projet);
             $rendus = $this->modele->getRendus($id_projet);
             $soutenances = $this->modele->getSoutenances($id_projet);
             $groupes = $this->modele->getGroupesProjet($id_projet);
             $etudiants = $this->modele->getEtudiantsParSemestre($projet['id_semestre']);
+            $notes = array();
+            foreach ($etudiants as $etudiant) {
+                $notes = array_merge($notes, $this->modele->getStudentGrades($etudiant['id_etudiant']));
+            }
         }
 
-        $this->vue->afficherFormulaireEdition($projet, $ressources, $rendus, $soutenances,$groupes, $etudiants, $notes);
+        $this->vue->afficherFormulaireEdition($projet, $ressources, $rendus, $soutenances, $groupes, $etudiants, $notes);
     }
 }
