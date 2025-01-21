@@ -54,8 +54,27 @@ class ContEditProjet {
                 $lien = $_POST['lien'];
                 $id_utilisateur = $_SESSION['id_utilisateur'];
                 $id_enseignant = $this->modele->getEnseignantId($id_utilisateur);
-
-                if ($id_enseignant && $this->modele->addRessource($id_enseignant, $titre, $type, $lien)) {
+        
+               
+                if (isset($_FILES['fichier']) && $_FILES['fichier']['error'] === UPLOAD_ERR_OK) {
+                    $target_dir = "uploads/";
+                    $target_file = $target_dir . basename($_FILES["fichier"]["name"]);
+        
+                   
+                    if (!is_dir($target_dir)) {
+                        mkdir($target_dir, 0777, true);
+                    }
+        
+                
+                    if (move_uploaded_file($_FILES["fichier"]["tmp_name"], $target_file)) {
+                        $fichier = $target_file;
+                    } 
+                    }
+                else {
+                    $fichier = null;
+                }
+        
+                if ($id_enseignant && $this->modele->addRessource($id_enseignant, $titre, $type, $lien, $fichier)) {
                     $ressources = $this->modele->getRessources($id_projet);
                 }
             } elseif (isset($_POST['action']) && $_POST['action'] === 'add_rendu') {
@@ -95,7 +114,7 @@ class ContEditProjet {
                 $nom_groupe = $_POST['nom_groupe'];
                 $this->modele->createGroup($id_projet, $nom_groupe);
             }
-
+        
             // Refetch data after update/delete
             $projet = $this->modele->getProjet($id_projet);
             $ressources = $this->modele->getRessources($id_projet);
@@ -108,6 +127,7 @@ class ContEditProjet {
                 $notes = array_merge($notes, $this->modele->getStudentGrades($etudiant['id_etudiant']));
             }
         }
+        
 
         $this->vue->afficherFormulaireEdition($projet, $ressources, $rendus, $soutenances, $groupes, $etudiants, $notes);
     }

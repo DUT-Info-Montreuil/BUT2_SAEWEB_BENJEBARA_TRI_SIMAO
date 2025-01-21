@@ -97,6 +97,7 @@ CREATE TABLE ressource (
     lien VARCHAR(255),
     date_creation DATE,
     id_enseignant INT,
+    fichier VARCHAR(255),
     FOREIGN KEY (id_enseignant) REFERENCES enseignant(id_enseignant)
 );
 

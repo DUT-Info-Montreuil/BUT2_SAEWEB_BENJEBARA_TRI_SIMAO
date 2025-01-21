@@ -36,17 +36,21 @@ class ModeleEditProjet extends Connexion {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    public function addRessource($id_enseignant, $titre, $type, $lien) {
-      $date_creation = date('Y-m-d');
-      $query = "INSERT INTO ressource (titre, type, lien, date_creation, id_enseignant) VALUES (:titre, :type, :lien, :date_creation, :id_enseignant)";
-      $stmt = self::$bdd->prepare($query);
-      $stmt->bindParam(':titre', $titre);
-      $stmt->bindParam(':type', $type);
-      $stmt->bindParam(':lien', $lien);
-      $stmt->bindParam(':date_creation', $date_creation);
-      $stmt->bindParam(':id_enseignant', $id_enseignant);
-      return $stmt->execute();
+    public function addRessource($id_enseignant, $titre, $type, $lien, $fichier) {
+        $date_creation = date('Y-m-d');
+        $query = "INSERT INTO ressource (titre, type, lien, fichier, date_creation, id_enseignant) 
+                  VALUES (:titre, :type, :lien, :fichier, :date_creation, :id_enseignant)";
+        $stmt = self::$bdd->prepare($query);
+        $stmt->bindParam(':titre', $titre);
+        $stmt->bindParam(':type', $type);
+        $stmt->bindParam(':lien', $lien);
+        $stmt->bindParam(':fichier', $fichier); // Thêm tham số file
+        $stmt->bindParam(':date_creation', $date_creation);
+        $stmt->bindParam(':id_enseignant', $id_enseignant);
+        return $stmt->execute();
     }
+    
+    
     
 
     public function getRendus($id_projet) {

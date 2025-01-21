@@ -218,7 +218,7 @@ class VueEditProjet {
                             <?php endif; ?>
 
                             <h3 class="subtitle">Ajouter une ressource</h3>
-                            <form action="" method="post">
+                            <form action="" method="post" enctype="multipart/form-data">
                                 <input type="hidden" name="action" value="add_ressource">
                                 <div class="field">
                                     <label class="label">Titre</label>
@@ -232,7 +232,7 @@ class VueEditProjet {
                                 <div class="field">
                                     <label class="label">Type</label>
                                     <div class="control has-icons-left">
-                                        <input class="input" type="text" name="type" required>
+                                        <input class="input" type="text" name="type" >
                                         <span class="icon is-small is-left">
                                             <i class="fas fa-tag"></i>
                                         </span>
@@ -241,11 +241,19 @@ class VueEditProjet {
                                 <div class="field">
                                     <label class="label">Lien</label>
                                     <div class="control has-icons-left">
-                                        <input class="input" type="url" name="lien" required>
+                                        <input class="input" type="url" name="lien" >
                                         <span class="icon is-small is-left">
                                             <i class="fas fa-link"></i>
                                         </span>
                                     </div>
+                                </div>
+                                <div class="field"> <label class="label">Fichier</label> 
+                                    <div class="control has-icons-left"> 
+                                        <input class="input" type="file" name="fichier"> 
+                                        <span class="icon is-small is-left"> 
+                                            <i class="fas fa-file-upload"></i> 
+                                    </span> 
+                                    </div> 
                                 </div>
                                 <div class="field">
                                     <div class="control">
