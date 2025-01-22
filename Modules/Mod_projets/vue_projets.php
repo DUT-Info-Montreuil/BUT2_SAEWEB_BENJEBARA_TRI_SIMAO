@@ -7,7 +7,7 @@ class VueProjets {
 
     public function __construct() {}
 
-    public function afficherListeProjets($projets, $isEnseignant) {      
+    public function afficherListeProjets($projets, $isEnseignant, $projetsResponsable) {      
           afficherHeader("Liste des projets");
 
         ?>
@@ -255,20 +255,23 @@ class VueProjets {
                                             </span>
                                             Voir
                                         </a>
-                                        <?php if ($isEnseignant): ?>
-                                        <a href="index.php?module=edit_projet&id=<?php echo $projet['id_projet']; ?>" class="card-footer-item has-text-warning">
-                                            <span class="icon">
-                                                <i class="fas fa-edit"></i>
-                                            </span>
-                                            Modifier
-                                            </a>
-                                        <a href="delete.php?id=<?php echo $projet['id_projet']; ?>" class="card-footer-item has-text-danger" onclick="return confirm('Voulez-vous vraiment supprimer ce projet ?');">
-                                            <span class="icon">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </span>
-                                            Supprimer
-                                        </a>
-                                    <?php endif; ?>
+                                        <?php if ($isEnseignant): 
+                                            $isResponsable = in_array($projet['id_projet'], $projetsResponsable);
+                                            if ($isResponsable): ?>
+                                                <a href="index.php?module=edit_projet&id=<?php echo $projet['id_projet']; ?>" class="card-footer-item has-text-warning">
+                                                    <span class="icon">
+                                                        <i class="fas fa-edit"></i>
+                                                    </span>
+                                                    Modifier
+                                                </a>
+                                                <a href="delete.php?id=<?php echo $projet['id_projet']; ?>" class="card-footer-item has-text-danger" onclick="return confirm('Voulez-vous vraiment supprimer ce projet ?');">
+                                                    <span class="icon">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </span>
+                                                    Supprimer
+                                                </a>
+                                            <?php endif; 
+                                        endif; ?>
 
                                     </footer>
                                 </div>
