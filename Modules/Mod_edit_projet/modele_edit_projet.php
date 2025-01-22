@@ -3,8 +3,12 @@ require_once 'connexion.php';
 
 class ModeleEditProjet extends Connexion {
 
-    public function __construct() {
-        parent::initConnexion();
+    public function __construct() { 
+        parent::initConnexion(); 
+        $this->db = self::$bdd; // Khởi tạo thuộc tính $db 
+    
+    
+    
     }
 
     public function getProjet($id_projet) {
@@ -36,20 +40,20 @@ class ModeleEditProjet extends Connexion {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    public function addRessource($id_enseignant, $titre, $type, $lien, $fichier) {
-        $date_creation = date('Y-m-d');
-        $query = "INSERT INTO ressource (titre, type, lien, fichier, date_creation, id_enseignant) 
-                  VALUES (:titre, :type, :lien, :fichier, :date_creation, :id_enseignant)";
-        $stmt = self::$bdd->prepare($query);
-        $stmt->bindParam(':titre', $titre);
-        $stmt->bindParam(':type', $type);
-        $stmt->bindParam(':lien', $lien);
-        $stmt->bindParam(':fichier', $fichier); // Thêm tham số file
-        $stmt->bindParam(':date_creation', $date_creation);
-        $stmt->bindParam(':id_enseignant', $id_enseignant);
+    public function addRessource($id_projet, $id_enseignant, $titre, $type, $lien, $fichier) { 
+        $date_creation = date('Y-m-d'); 
+        $query = "INSERT INTO ressource (id_projet, titre, type, lien, fichier, date_creation, id_enseignant) 
+        VALUES (:id_projet, :titre, :type, :lien, :fichier, :date_creation, :id_enseignant)"; 
+        $stmt = $this->db->prepare($query); 
+        $stmt->bindParam(':id_projet', $id_projet, PDO::PARAM_INT); 
+        $stmt->bindParam(':titre', $titre); 
+        $stmt->bindParam(':type', $type); 
+        $stmt->bindParam(':lien', $lien); 
+        $stmt->bindParam(':fichier', $fichier); 
+        $stmt->bindParam(':date_creation', $date_creation); 
+        $stmt->bindParam(':id_enseignant', $id_enseignant); 
         return $stmt->execute();
-    }
-    
+}
     
     
 

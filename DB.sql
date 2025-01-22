@@ -98,6 +98,7 @@ CREATE TABLE ressource (
     date_creation DATE,
     id_enseignant INT,
     fichier VARCHAR(255),
+    id_projet INT,
     FOREIGN KEY (id_enseignant) REFERENCES enseignant(id_enseignant)
 );
 
