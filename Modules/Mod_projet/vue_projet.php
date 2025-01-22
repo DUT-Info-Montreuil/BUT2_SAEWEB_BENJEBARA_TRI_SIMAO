@@ -15,7 +15,7 @@ class VueProjet {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Projet : <?php echo htmlspecialchars($projet['nom']); ?></title>
+            <title>Liste des projets : <?php echo htmlspecialchars($projet['nom']); ?></title>
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
             <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
@@ -69,7 +69,7 @@ class VueProjet {
             <div class="navbar-brand" style="display: flex; align-items: center; justify-content: center;">
                 <a class="navbar-item" href="index.php?module=projets">
                     <span class="icon"><i class="fas fa-tasks"></i></span>
-                    <span style="font-weight: bold; color: black;">Projet</span>
+                    <span style="font-weight: bold; color: black;">Liste des projets</span>
                 </a>
                 <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
                     <span aria-hidden="true"></span>
