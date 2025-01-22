@@ -4,8 +4,8 @@ USE sae;
 INSERT INTO utilisateur (nom, prenom, email, mot_de_pass) VALUES
 ('Dupont', 'Jean', 'prof', 'aze'),
 ('Martin', 'Sophie', 'tom', 'aze'),
-('Doe', 'John', 'john.doe@example.com', 'password123'),
-('Smith', 'Jane', 'jane.smith@example.com', 'password456'),
+('Doe', 'John', 'prof2', 'aze'),
+('Smith', 'Jane', 'prof3', 'aze'),
 ('Dupont', 'Jean', 'jean.dupont@example.com', 'password789'),
 ('Martin', 'Sophie', 'sophie.martin@example.com', 'password101'),
 ('Lefevre', 'Pierre', 'pierre.lefevre@example.com', 'password112'),
@@ -16,7 +16,7 @@ INSERT INTO utilisateur (nom, prenom, email, mot_de_pass) VALUES
 
 -- Insertion des données dans la table Enseignant
 INSERT INTO enseignant (id_utilisateur) VALUES
-(1), (3);
+(1), (3), (4), (5);
 
 -- Insertion des données dans la table Semestre
 INSERT INTO semestre (id_semestre, type) VALUES
@@ -25,7 +25,7 @@ INSERT INTO semestre (id_semestre, type) VALUES
 
 -- Insertion des données dans la table Etudiant
 INSERT INTO etudiant (id_utilisateur, semestre_utilisateur) VALUES
-(2, 1), (4, 1), (5, 2), (6, 2), (7, 3), (8, 3), (9, 4), (10, 4);
+(2, 1), (6, 2), (7, 3), (8, 3), (9, 4), (10, 4);
 
 
 -- Insertion des données dans la table Annee
@@ -41,9 +41,10 @@ INSERT INTO projet (nom, description, id_semestre, id_annee) VALUES
 ('Projet IA', 'Développement intelligence artificielle', 4, 2023);
 
 -- Insertion des données dans la table Responsable
-INSERT INTO responsable (nom, id_enseignant, id_projet) VALUES
-('Doe John', 1, 1),
-('Smith Jane', 2, 2);
+INSERT INTO responsable (id_enseignant, id_projet) VALUES
+(1, 1),
+(1, 2),
+(2, 2);
 
 -- Insertion des données dans la table Groupe
 INSERT INTO groupe (nom, image_titre, id_projet) VALUES
@@ -56,11 +57,9 @@ INSERT INTO groupe (nom, image_titre, id_projet) VALUES
 -- Insertion des données dans la table etudiant_groupe
 INSERT INTO etudiant_groupe (id_groupe, id_etudiant) VALUES
 (1, 2),
-(2, 4),
-(3, 5),
-(3, 6),
-(4, 7),
-(4, 8);
+(3, 2),
+(4, 3),
+(4, 4);
 
 -- Insertion des données dans la table Ressource
 INSERT INTO ressource (titre, type, lien, date_creation, id_enseignant) VALUES
@@ -90,9 +89,9 @@ INSERT INTO evaluation (type, coef, est_individuel) VALUES
 -- Insertion des données dans la table Note
 INSERT INTO note (note, id_evaluation, id_etudiant, id_groupe) VALUES
 (15.5, 1, 3, 1),
-(12.0, 1, 4, 1),
+(12.0, 1, 3, 1),
 (17.5, 2, 3, 1),
-(14.0, 1, 5, 2);
+(14.0, 1, 3, 2);
 
 -- Insertion des données dans la table Champ
 INSERT INTO champ (nom, type) VALUES
