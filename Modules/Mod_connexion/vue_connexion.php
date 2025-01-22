@@ -9,7 +9,7 @@ class VueConnexion {
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma/css/bulma.min.css">
         </head>
         <body>
-        <a href="index.php?module=deconnexion">Déconnexion</a>
+        
             <section class="section">
                 <div class="container">
                     <div class="columns is-centered">
