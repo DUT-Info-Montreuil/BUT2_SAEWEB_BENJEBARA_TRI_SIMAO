@@ -14,6 +14,9 @@ class ModConnexion {
                 case 'ajout':
                     $this->controleur->ajout_data(); 
                     break;
+                    case 'hash_passwords':
+                    $this->controleur->hashAllPasswords();
+                    break;
                 default:
                     echo "Action non valide";
                     break;

@@ -2,42 +2,48 @@
 require_once 'connexion.php';
 
 class ModeleConnexion extends Connexion {
-
     public function __construct() {
         self::initConnexion();
     }
 
-    public function connecter_util($id, $passwd) {
-        $sth = self::$bdd->prepare("SELECT mot_de_pass FROM utilisateur WHERE login = :login");
-        $sth->execute([':login' => $id]);
+    public function verifierConnexion($email, $password) {
+        try {
+            $query = "SELECT id_utilisateur, mot_de_pass FROM utilisateur WHERE email = :email";
+            $stmt = self::$bdd->prepare($query);
+            $stmt->execute([':email' => $email]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $result = $sth->fetch(PDO::FETCH_ASSOC);
-        //$sth->execute([':id_utilisateur' => $id,':mot_de_pass' => password_hash($passwd, PASSWORD_DEFAULT)]);
-        $passwd_hash = $sth->execute([':login' => $id]);
-        /*
-        if ($passwd_hash) {
-            if (password_verify($passwd, $passwd_hash)) {
-                echo 'Le mot de passe est valide !'; 
-            } else {
-                echo 'Le mot de passe est invalide !';
+            if ($user && password_verify($password, $user['mot_de_pass'])) {
+                return $user['id_utilisateur'];
             }
-        }
-        */
-        if (!$result) {
-            echo "Cette personne n'existe pas";
-            return false; 
-        }  
-        
-        $passwd_hash = $result['mot_de_pass'];
-
-        if (password_verify($passwd, $passwd_hash)) {
-            echo "Connexion réussie ! Le mot de passe est valide !";
-            return true;
-        } else {
-            echo "Mot de passe incorrect";
             return false;
+        } catch (Exception $e) {
+            die("Erreur lors de la connexion : " . $e->getMessage());
         }
     }
-    
+    public function hashAllPasswords() {
+        try {
+            $query = "SELECT id_utilisateur, mot_de_pass FROM utilisateur";
+            $stmt = self::$bdd->query($query);
+            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($users as $user) {
+                if (password_get_info($user['mot_de_pass'])['algo'] == 0) {
+                    $hashedPassword = password_hash($user['mot_de_pass'], PASSWORD_DEFAULT);
+                $updateQuery = "UPDATE utilisateur SET mot_de_pass = :password WHERE id_utilisateur = :id";
+                $updateStmt = self::$bdd->prepare($updateQuery);
+                $updateStmt->execute([
+                    ':password' => $hashedPassword,
+                    ':id' => $user['id_utilisateur']
+                ]);
+                }
+                
+                
+            }
+            echo "Tous les mots de passe ont été hashés avec succès.";
+        } catch (Exception $e) {
+            die("Erreur lors du hashage des mots de passe : " . $e->getMessage());
+        }
+    }
 }
 ?>
