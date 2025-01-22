@@ -31,7 +31,7 @@ function afficherHeader($titre = "SAE Manager") {
     <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item" href="index.php?module=deconnexion" style="font-weight: bold; color: black;">Déconnexion</a>
-            <a class="navbar-item" href="index.php?module=projets" style="font-weight: bold; color: black;">Projets</a>
+            <a class="navbar-item" href="index.php?module=projets" style="font-weight: bold; color: black;">Liste des projets</a>
 
             <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
                 <span aria-hidden="true"></span>

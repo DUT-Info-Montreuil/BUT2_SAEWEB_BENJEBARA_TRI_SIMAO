@@ -69,7 +69,7 @@ class VueProjet {
             <div class="navbar-brand" style="display: flex; align-items: center; justify-content: center;">
                 <a class="navbar-item" href="index.php?module=projets">
                     <span class="icon"><i class="fas fa-tasks"></i></span>
-                    <span style="font-weight: bold; color: black;">Projet</span>
+                    <span style="font-weight: bold; color: black;">Liste des projets</span>
                 </a>
                 <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
                     <span aria-hidden="true"></span>
