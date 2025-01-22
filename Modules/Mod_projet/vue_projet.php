@@ -121,7 +121,7 @@ class VueProjet {
                         <div class="content section-content">
                             <p><strong>Nom du projet :</strong> <?php echo htmlspecialchars($projet['nom']); ?></p>
                             <p><strong>Description :</strong> <?php echo htmlspecialchars($projet['description']); ?></p>
-                            <p><strong>Crée par :</strong> <?php echo htmlspecialchars($projet['responsable']); ?></p>
+                            <p><strong>Créé par :</strong> <?php echo htmlspecialchars($projet['responsable']); ?></p>
                         </div>
                     </div>
                 </div>
@@ -171,37 +171,57 @@ class VueProjet {
                 </div>
 
                 <div class="card" data-section-content="rendus">
-                    <div class="card-content">
-                        <h2 class="section-title toggle-section">
-                            <span class="icon"><i class="fas fa-chevron-right"></i></span>
-                            <span>Rendus</span>
-                        </h2>
-                        <div class="section-content is-hidden">
-                            <?php if (empty($rendus)): ?>
-                                <p>Aucun rendu pour ce projet.</p>
-                            <?php else: ?>
-                                <table class="table is-striped is-hoverable is-fullwidth">
-                                    <thead>
+                <div class="card-content">
+                    <h2 class="section-title toggle-section">
+                        <span class="icon"><i class="fas fa-chevron-right"></i></span>
+                        <span>Rendus</span>
+                    </h2>
+                    <div class="section-content is-hidden">
+                        <?php if (empty($rendus)): ?>
+                            <p>Aucun rendu pour ce projet.</p>
+                        <?php else: ?>
+                            <table class="table is-striped is-hoverable is-fullwidth">
+                                <thead>
                                     <tr>
                                         <th>Nom</th>
                                         <th>Description</th>
                                         <th>Date limite</th>
+                                        <th>Fichier</th>
                                     </tr>
-                                    </thead>
-                                    <tbody>
+                                </thead>
+                                <tbody>
                                     <?php foreach ($rendus as $rendu): ?>
                                         <tr>
                                             <td><?php echo htmlspecialchars($rendu['nom']); ?></td>
                                             <td><?php echo htmlspecialchars($rendu['description']); ?></td>
                                             <td><?php echo htmlspecialchars($rendu['date_limite']); ?></td>
+                                            <td>
+                                                <?php if (!empty($rendu['fichier'])): ?>
+                                                    <a href="<?php echo htmlspecialchars($rendu['fichier']); ?>" download>Télécharger</a>
+                                                <?php else: ?>
+                                                    <!-- Form nộp tệp -->
+                                                    <form action="upload_file.php" method="post" enctype="multipart/form-data">
+                                                        <input type="hidden" name="id_rendu" value="<?php echo htmlspecialchars($rendu['id_rendu']); ?>">
+                                                        <div class="field">
+                                                            <div class="control">
+                                                                <input class="input" type="file" name="fichier" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="control">
+                                                            <button class="button is-primary" type="submit">Soumettre</button>
+                                                        </div>
+                                                    </form>
+                                                <?php endif; ?>
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            <?php endif; ?>
-                        </div>
+                                </tbody>
+                            </table>
+                        <?php endif; ?>
                     </div>
                 </div>
+            </div>
+
 
                 <div class="card" data-section-content="soutenances">
                     <div class="card-content">
