@@ -9,4 +9,3 @@ class ModProjets {
         $this->controleur->listeProjets();
     }
 }
-?>
