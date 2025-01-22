@@ -61,7 +61,6 @@ CREATE TABLE projet (
 DROP TABLE IF EXISTS responsable;
 CREATE TABLE responsable (
     id_responsable INT AUTO_INCREMENT PRIMARY KEY,
-    nom VARCHAR(100),
     id_enseignant INT,
     id_projet INT,
     FOREIGN KEY (id_enseignant) REFERENCES enseignant(id_enseignant),
