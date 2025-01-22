@@ -76,11 +76,7 @@ class ModeleProjet extends Connexion {
     }
 
     public function getRessources($id_projet) {
-        $query = "SELECT r.* 
-        FROM ressource r
-        INNER JOIN responsable rep ON r.id_enseignant = rep.id_enseignant
-        INNER JOIN projet p ON rep.id_projet = p.id_projet
-        WHERE p.id_projet = :id_projet";
+        $query = "SELECT * FROM ressource WHERE id_projet = :id_projet";
         $stmt = self::$bdd->prepare($query);
         $stmt->bindParam(':id_projet', $id_projet, PDO::PARAM_INT);
         $stmt->execute();

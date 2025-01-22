@@ -136,24 +136,33 @@ class VueProjet {
                                 <p>Aucune ressource disponible pour ce projet.</p>
                             <?php else: ?>
                                 <table class="table is-striped is-hoverable is-fullwidth">
-                                    <thead>
+                                <thead>
                                     <tr>
                                         <th>Titre</th>
                                         <th>Type</th>
                                         <th>Lien</th>
+                                        <th>Fichier</th>
                                         <th>Date d'ajout</th>
                                     </tr>
-                                    </thead>
-                                    <tbody>
+                                </thead>
+                                <tbody>
                                     <?php foreach ($ressources as $ressource): ?>
                                         <tr>
                                             <td><?php echo htmlspecialchars($ressource['titre']); ?></td>
                                             <td><?php echo htmlspecialchars($ressource['type']); ?></td>
                                             <td><a href="<?php echo htmlspecialchars($ressource['lien']); ?>" target="_blank"><?php echo htmlspecialchars($ressource['lien']); ?></a></td>
+                                            <td>
+                                                <?php if ($ressource['fichier']): ?>
+                                                    <a href="<?php echo htmlspecialchars($ressource['fichier']); ?>" target="_blank"><?php echo htmlspecialchars(basename($ressource['fichier'])); ?></a>
+                                                <?php else: ?>
+                                                    Aucun fichier
+                                                <?php endif; ?>
+                                            </td>
                                             <td><?php echo htmlspecialchars($ressource['date_creation']); ?></td>
                                         </tr>
                                     <?php endforeach; ?>
-                                    </tbody>
+                                </tbody>
+
                                 </table>
                             <?php endif; ?>
                         </div>
