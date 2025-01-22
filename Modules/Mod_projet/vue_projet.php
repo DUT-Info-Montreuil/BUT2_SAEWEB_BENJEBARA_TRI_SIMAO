@@ -121,6 +121,7 @@ class VueProjet {
                         <div class="content section-content">
                             <p><strong>Nom du projet :</strong> <?php echo htmlspecialchars($projet['nom']); ?></p>
                             <p><strong>Description :</strong> <?php echo htmlspecialchars($projet['description']); ?></p>
+                            <p><strong>Crée par :</strong> <?php echo htmlspecialchars($projet['responsable']); ?></p>
                         </div>
                     </div>
                 </div>

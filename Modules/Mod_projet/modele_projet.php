@@ -64,16 +64,18 @@ class ModeleProjet extends Connexion {
     }
 
     public function getProjet($id_projet) {
-        $query = "SELECT p.id_projet, p.nom, p.description, s.type AS semestre, YEAR(a.debut_annee) AS annee, p.id_semestre 
-        FROM projet p
-        LEFT JOIN semestre s ON p.id_semestre = s.id_semestre
-        LEFT JOIN annee a ON p.id_annee = a.id_annee
-        WHERE p.id_projet = :id_projet";
+        $query = "SELECT p.id_projet, p.nom, p.description, s.type AS semestre, YEAR(a.debut_annee) AS annee, p.id_semestre, r.nom AS responsable
+                  FROM projet p
+                  LEFT JOIN semestre s ON p.id_semestre = s.id_semestre
+                  LEFT JOIN annee a ON p.id_annee = a.id_annee
+                  LEFT JOIN responsable r ON p.id_projet = r.id_projet
+                  WHERE p.id_projet = :id_projet";
         $stmt = self::$bdd->prepare($query);
         $stmt->bindParam(':id_projet', $id_projet, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    
 
     public function getRessources($id_projet) {
         $query = "SELECT * FROM ressource WHERE id_projet = :id_projet";
