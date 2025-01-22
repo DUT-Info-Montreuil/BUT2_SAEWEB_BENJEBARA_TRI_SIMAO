@@ -29,7 +29,7 @@ class ContProjet {
         $soutenances = $this->modele->getSoutenances($id_projet);
         $groupes = $this->modele->getGroupesProjet($id_projet);
         $isEnseignant = isset($_SESSION['id_utilisateur']) ?
-            $this->modele->isEnseignant($_SESSION['id_utilisateur']) : false;
+        $this->modele->isEnseignant($_SESSION['id_utilisateur']) : false;
 
         $etudiant = $this->modele->getEtudiantParUtilisateur($id_utilisateur);
         $etudiants = $this->modele->getEtudiantsParSemestre($projet['id_semestre']);
@@ -41,7 +41,7 @@ class ContProjet {
         }
 
         if ($projet) {
-            $this->vue->afficherProjet($projet, $ressources, $rendus, $soutenances, $groupes, $isEnseignant, $notes, $etudiant, $etudiants);
+            $this->vue->afficherProjet($projet, $ressources, $rendus, $soutenances, $groupes, $notes, $etudiant, $etudiants);
         } else {
             $this->vue->afficherErreur("Projet non trouvé.");
         }

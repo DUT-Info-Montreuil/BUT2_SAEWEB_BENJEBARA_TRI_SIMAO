@@ -16,7 +16,7 @@ class ContProjets {
         $id_utilisateur = isset($_SESSION['id_utilisateur']) ? $_SESSION['id_utilisateur'] : null;
         $projets = $this->modele->getProjets();
         $isEnseignant = isset($_SESSION['id_utilisateur']) ? 
-                        $this->modele->isEnseignant($_SESSION['id_utilisateur']) : false;
+            $this->modele->isEnseignant($_SESSION['id_utilisateur']) : false;
 
         $projetsResponsable = [];
         if ($isEnseignant) {

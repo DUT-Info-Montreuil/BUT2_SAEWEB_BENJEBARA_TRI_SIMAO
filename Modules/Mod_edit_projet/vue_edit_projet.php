@@ -7,7 +7,7 @@ class VueEditProjet {
 
     public function __construct() {}
 
-    public function afficherFormulaireEdition($projet, $ressources, $rendus, $soutenances, $groupes, $etudiants, $notes) {
+    public function afficherFormulaireEdition($projet, $ressources, $rendus, $soutenances, $groupes, $etudiants, $notes, $responsables, $enseignants) {
         afficherHeader("Liste des projets");
         ?>
         <!DOCTYPE html>
@@ -29,8 +29,8 @@ class VueEditProjet {
                 }
                 .card {
                     margin-bottom: 20px;
-                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre légère */
-                    border-radius: 6px; /* Bords arrondis */
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    border-radius: 6px;
                 }
                 .navbar {
                     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -178,7 +178,55 @@ class VueEditProjet {
                         </form>
                     </div>
                 </div>
+                <div class="card">
+                <div class="card-content">
+                    <h3 class="subtitle">Gestion des responsables</h3>
 
+                    <?php 
+                    if (!empty($responsables)): ?>
+                        <div class="tags">
+                            <?php foreach ($responsables as $responsable): ?>
+                                <span class="tag is-primary">
+                                    <?php echo htmlspecialchars($responsable['prenom'] . ' ' . $responsable['nom']); ?>
+                                    <form action="" method="post" style="display: inline;">
+                                        <input type="hidden" name="action" value="remove_responsable">
+                                        <input type="hidden" name="id_responsable" value="<?php echo $responsable['id_responsable']; ?>">
+                                        <button class="delete is-small" type="submit"></button>
+                                    </form>
+                                </span>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+                            
+                    <form action="" method="post">
+                        <input type="hidden" name="action" value="add_responsable">
+                        <div class="field has-addons">
+                            <div class="control is-expanded">
+                                <div class="select is-fullwidth">
+                                <select name="id_enseignant" required>
+                                <option value="">Sélectionner un enseignant</option>
+                                <?php if (!empty($enseignants)): ?>
+                                    <?php foreach ($enseignants as $enseignant): ?>
+                                        <option value="<?php echo $enseignant['id_enseignant']; ?>">
+                                            <?php echo htmlspecialchars($enseignant['prenom'] . ' ' . $enseignant['nom']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <option disabled>Aucun enseignant disponible</option>
+                                <?php endif; ?>
+                                </select>
+                                </div>
+                            </div>
+                            <div class="control">
+                                <button class="button is-primary" type="submit">
+                                    <span class="icon"><i class="fas fa-user-plus"></i></span>
+                                    <span>Ajouter</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
                 <div class="card" data-section-content="ressources">
                     <div class="card-content">
                         <h2 class="section-title toggle-section">

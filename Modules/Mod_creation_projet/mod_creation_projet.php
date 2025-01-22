@@ -6,11 +6,11 @@ class ModCreationProjet {
 
     public function __construct() {
         $this->controleur = new ContCreationProjet();
-        $this->controleur->afficherFormulaire();
-
 
         if (isset($_POST['creer_projet'])) {
             $this->controleur->creerProjet();
+        } else {
+            $this->controleur->afficherFormulaire();
         }
     }
 }

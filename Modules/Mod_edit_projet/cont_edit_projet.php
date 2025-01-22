@@ -29,6 +29,9 @@ class ContEditProjet {
             $notes = array_merge($notes, $this->modele->getStudentGrades($etudiant['id_etudiant']));
         }
 
+        $responsables = $this->modele->getResponsablesProjet($id_projet);
+        $enseignants = $this->modele->getAllEnseignants($id_projet);
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Handle actions (update, delete, etc.)
             if (isset($_POST['action'])) {
@@ -116,15 +119,21 @@ class ContEditProjet {
                         $nom_groupe = $_POST['nom_groupe'];
                         $this->modele->createGroup($id_projet, $nom_groupe);
                         break;
-
-                    // Add other cases for different actions
-
+                    case 'add_responsable':
+                        $id_enseignant = $_POST['id_enseignant'];
+                        $this->modele->addResponsable($id_enseignant, $id_projet);
+                        break;
+                        
+                    case 'remove_responsable':
+                        $id_responsable = $_POST['id_responsable'];
+                        $this->modele->removeResponsable($id_responsable);
+                        break;
+                                        
                     default:
                         break;
                 }
             }
 
-            // Refetch data after update/delete
             $projet = $this->modele->getProjet($id_projet);
             $ressources = $this->modele->getRessources($id_projet);
             $rendus = $this->modele->getRendus($id_projet);
@@ -135,9 +144,11 @@ class ContEditProjet {
             foreach ($etudiants as $etudiant) {
                 $notes = array_merge($notes, $this->modele->getStudentGrades($etudiant['id_etudiant']));
             }
+            $responsables = $this->modele->getResponsablesProjet($id_projet);
+            $enseignants = $this->modele->getAllEnseignants($id_projet);
         }
 
-        $this->vue->afficherFormulaireEdition($projet, $ressources, $rendus, $soutenances, $groupes, $etudiants, $notes);
+       $this->vue->afficherFormulaireEdition($projet, $ressources, $rendus, $soutenances, $groupes, $etudiants, $notes, $responsables, $enseignants);
     }
 }
 ?>

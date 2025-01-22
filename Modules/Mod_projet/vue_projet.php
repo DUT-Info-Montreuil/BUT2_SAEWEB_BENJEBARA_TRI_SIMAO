@@ -7,7 +7,7 @@ class VueProjet {
 
     public function __construct() {}
 
-    public function afficherProjet($projet, $ressources, $rendus, $soutenances, $groupes, $etudiants, $notes, $etudiantConnecte) {
+    public function afficherProjet($projet, $ressources, $rendus, $soutenances, $groupes, $notes, $etudiantConnecte,$etudiants) {
         afficherHeader("Projet");
         ?>
         <!DOCTYPE html>
@@ -15,7 +15,7 @@ class VueProjet {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Liste des projets : <?php echo htmlspecialchars($projet['nom']); ?></title>
+            <title>Projet : <?php echo htmlspecialchars($projet['nom']); ?></title>
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
             <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
@@ -69,7 +69,7 @@ class VueProjet {
             <div class="navbar-brand" style="display: flex; align-items: center; justify-content: center;">
                 <a class="navbar-item" href="index.php?module=projets">
                     <span class="icon"><i class="fas fa-tasks"></i></span>
-                    <span style="font-weight: bold; color: black;">Liste des projets</span>
+                    <span style="font-weight: bold; color: black;">Projet</span>
                 </a>
                 <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
                     <span aria-hidden="true"></span>
@@ -121,7 +121,6 @@ class VueProjet {
                         <div class="content section-content">
                             <p><strong>Nom du projet :</strong> <?php echo htmlspecialchars($projet['nom']); ?></p>
                             <p><strong>Description :</strong> <?php echo htmlspecialchars($projet['description']); ?></p>
-                            <p><strong>Créé par :</strong> <?php echo htmlspecialchars($projet['responsable']); ?></p>
                         </div>
                     </div>
                 </div>
@@ -137,33 +136,24 @@ class VueProjet {
                                 <p>Aucune ressource disponible pour ce projet.</p>
                             <?php else: ?>
                                 <table class="table is-striped is-hoverable is-fullwidth">
-                                <thead>
+                                    <thead>
                                     <tr>
                                         <th>Titre</th>
                                         <th>Type</th>
                                         <th>Lien</th>
-                                        <th>Fichier</th>
                                         <th>Date d'ajout</th>
                                     </tr>
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody>
                                     <?php foreach ($ressources as $ressource): ?>
                                         <tr>
                                             <td><?php echo htmlspecialchars($ressource['titre']); ?></td>
                                             <td><?php echo htmlspecialchars($ressource['type']); ?></td>
                                             <td><a href="<?php echo htmlspecialchars($ressource['lien']); ?>" target="_blank"><?php echo htmlspecialchars($ressource['lien']); ?></a></td>
-                                            <td>
-                                                <?php if ($ressource['fichier']): ?>
-                                                    <a href="<?php echo htmlspecialchars($ressource['fichier']); ?>" target="_blank"><?php echo htmlspecialchars(basename($ressource['fichier'])); ?></a>
-                                                <?php else: ?>
-                                                    Aucun fichier
-                                                <?php endif; ?>
-                                            </td>
                                             <td><?php echo htmlspecialchars($ressource['date_creation']); ?></td>
                                         </tr>
                                     <?php endforeach; ?>
-                                </tbody>
-
+                                    </tbody>
                                 </table>
                             <?php endif; ?>
                         </div>
@@ -171,57 +161,37 @@ class VueProjet {
                 </div>
 
                 <div class="card" data-section-content="rendus">
-                <div class="card-content">
-                    <h2 class="section-title toggle-section">
-                        <span class="icon"><i class="fas fa-chevron-right"></i></span>
-                        <span>Rendus</span>
-                    </h2>
-                    <div class="section-content is-hidden">
-                        <?php if (empty($rendus)): ?>
-                            <p>Aucun rendu pour ce projet.</p>
-                        <?php else: ?>
-                            <table class="table is-striped is-hoverable is-fullwidth">
-                                <thead>
+                    <div class="card-content">
+                        <h2 class="section-title toggle-section">
+                            <span class="icon"><i class="fas fa-chevron-right"></i></span>
+                            <span>Rendus</span>
+                        </h2>
+                        <div class="section-content is-hidden">
+                            <?php if (empty($rendus)): ?>
+                                <p>Aucun rendu pour ce projet.</p>
+                            <?php else: ?>
+                                <table class="table is-striped is-hoverable is-fullwidth">
+                                    <thead>
                                     <tr>
                                         <th>Nom</th>
                                         <th>Description</th>
                                         <th>Date limite</th>
-                                        <th>Fichier</th>
                                     </tr>
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody>
                                     <?php foreach ($rendus as $rendu): ?>
                                         <tr>
                                             <td><?php echo htmlspecialchars($rendu['nom']); ?></td>
                                             <td><?php echo htmlspecialchars($rendu['description']); ?></td>
                                             <td><?php echo htmlspecialchars($rendu['date_limite']); ?></td>
-                                            <td>
-                                                <?php if (!empty($rendu['fichier'])): ?>
-                                                    <a href="<?php echo htmlspecialchars($rendu['fichier']); ?>" download>Télécharger</a>
-                                                <?php else: ?>
-                                                    <!-- Form nộp tệp -->
-                                                    <form action="upload_file.php" method="post" enctype="multipart/form-data">
-                                                        <input type="hidden" name="id_rendu" value="<?php echo htmlspecialchars($rendu['id_rendu']); ?>">
-                                                        <div class="field">
-                                                            <div class="control">
-                                                                <input class="input" type="file" name="fichier" required>
-                                                            </div>
-                                                        </div>
-                                                        <div class="control">
-                                                            <button class="button is-primary" type="submit">Soumettre</button>
-                                                        </div>
-                                                    </form>
-                                                <?php endif; ?>
-                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
-            </div>
-
 
                 <div class="card" data-section-content="soutenances">
                     <div class="card-content">

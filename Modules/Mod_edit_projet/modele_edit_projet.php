@@ -5,7 +5,7 @@ class ModeleEditProjet extends Connexion {
 
     public function __construct() { 
         parent::initConnexion(); 
-        $this->db = self::$bdd; // Khởi tạo thuộc tính $db 
+        $this->db = self::$bdd; 
     
     
     
@@ -203,5 +203,47 @@ public function createGroup($id_projet, $nom_groupe) {
     $stmt->bindParam(':nom_groupe', $nom_groupe);
     $stmt->bindParam(':id_projet', $id_projet, PDO::PARAM_INT);
     $stmt->execute();
+}
+public function getResponsablesProjet($id_projet) {
+    $query = "SELECT r.id_responsable, u.nom, u.prenom 
+              FROM responsable r
+              JOIN enseignant e ON r.id_enseignant = e.id_enseignant
+              JOIN utilisateur u ON e.id_utilisateur = u.id_utilisateur
+              WHERE r.id_projet = :id_projet";
+    $stmt = self::$bdd->prepare($query);
+    $stmt->bindParam(':id_projet', $id_projet, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public function addResponsable($id_enseignant, $id_projet) {
+    $query = "INSERT INTO responsable (id_enseignant, id_projet) VALUES (:id_enseignant, :id_projet)";
+    $stmt = self::$bdd->prepare($query);
+    $stmt->bindParam(':id_enseignant', $id_enseignant, PDO::PARAM_INT);
+    $stmt->bindParam(':id_projet', $id_projet, PDO::PARAM_INT);
+    $stmt->execute();
+}
+
+public function removeResponsable($id_responsable) {
+    $query = "DELETE FROM responsable WHERE id_responsable = :id_responsable";
+    $stmt = self::$bdd->prepare($query);
+    $stmt->bindParam(':id_responsable', $id_responsable, PDO::PARAM_INT);
+    $stmt->execute();
+}
+
+public function getAllEnseignants($id_projet = null) {
+    $query = "SELECT e.id_enseignant, u.nom, u.prenom 
+              FROM enseignant e
+              JOIN utilisateur u ON e.id_utilisateur = u.id_utilisateur
+              WHERE e.id_enseignant NOT IN (
+                  SELECT id_enseignant 
+                  FROM responsable 
+                  WHERE id_projet = :id_projet
+              )";
+
+    $stmt = self::$bdd->prepare($query);
+    $stmt->bindParam(':id_projet', $id_projet, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 }
