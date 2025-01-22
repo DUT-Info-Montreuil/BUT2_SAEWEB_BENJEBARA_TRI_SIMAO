@@ -7,13 +7,12 @@ class ContCreationProjet {
     private $vue;
 
     public function __construct() {
-        session_start(); // Démarrage unique des sessions
+        session_start();
         $this->modele = new ModeleCreationProjet();
         $this->vue = new VueCreationProjet();
     }
 
     public function afficherFormulaire() {
-        // Vérification des droits avant d'afficher
         if (!isset($_SESSION['id_utilisateur'])) {
             header("Location: index.php?module=connexion");
             exit;
@@ -22,7 +21,6 @@ class ContCreationProjet {
     }
 
     public function creerProjet() {
-        // Vérification de la connexion
         if (!isset($_SESSION['id_utilisateur'])) {
             header("Location: index.php?module=connexion");
             exit;

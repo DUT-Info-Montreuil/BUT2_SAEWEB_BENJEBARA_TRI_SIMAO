@@ -131,7 +131,7 @@ class ModeleProjet extends Connexion {
         $stmt = self::$bdd->prepare($query);
         $stmt->bindParam(':id_utilisateur', $id_utilisateur, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC); // Use fetch() for a single student
+        return $stmt->fetch(PDO::FETCH_ASSOC); 
     }
     public function getEtudiantsParSemestre($id_semestre) {
         $query = "SELECT e.id_etudiant, u.nom as nom_etudiant, u.prenom as prenom_etudiant, eg.id_groupe
@@ -143,5 +143,41 @@ class ModeleProjet extends Connexion {
         $stmt->bindParam(':id_semestre', $id_semestre, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getEtudiantsSansGroupe($id_semestre) {
+        $query = "SELECT e.id_etudiant, u.nom, u.prenom 
+                  FROM etudiant e
+                  JOIN utilisateur u ON e.id_utilisateur = u.id_utilisateur
+                  LEFT JOIN etudiant_groupe eg ON e.id_etudiant = eg.id_etudiant
+                  WHERE e.semestre_utilisateur = :id_semestre AND eg.id_groupe IS NULL";
+        $stmt = self::$bdd->prepare($query);
+        $stmt->bindParam(':id_semestre', $id_semestre, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public function envoyerDemandeGroupe($id_projet, $id_etudiant, $membres) {
+        $query = "INSERT INTO demande_groupe (id_projet, id_etudiant, membres_demandes) 
+                  VALUES (:id_projet, :id_etudiant, :membres)";
+        $stmt = self::$bdd->prepare($query);
+        $stmt->execute([
+            ':id_projet' => $id_projet,
+            ':id_etudiant' => $id_etudiant,
+            ':membres' => implode(',', $membres)
+        ]);
+    }
+    public function getEtudiantParNom($nom, $id_semestre) {
+        $query = "SELECT e.id_etudiant 
+                  FROM etudiant e
+                  INNER JOIN utilisateur u ON e.id_utilisateur = u.id_utilisateur
+                  WHERE CONCAT(u.prenom, ' ', u.nom) = :nom 
+                  AND e.semestre_utilisateur = :id_semestre";
+        
+        $stmt = self::$bdd->prepare($query);
+        $stmt->bindParam(':nom', $nom, PDO::PARAM_STR);
+        $stmt->bindParam(':id_semestre', $id_semestre, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

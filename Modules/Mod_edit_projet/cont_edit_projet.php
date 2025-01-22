@@ -18,6 +18,7 @@ class ContEditProjet {
             $this->vue->afficherErreur("Projet non trouvé");
             return;
         }
+        $demandes = $this->modele->getDemandesGroupe($id_projet);
 
         $ressources = $this->modele->getRessources($id_projet);
         $rendus = $this->modele->getRendus($id_projet);
@@ -33,7 +34,6 @@ class ContEditProjet {
         $enseignants = $this->modele->getAllEnseignants($id_projet);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Handle actions (update, delete, etc.)
             if (isset($_POST['action'])) {
                 switch ($_POST['action']) {
                     case 'update_projet':
@@ -96,7 +96,7 @@ class ContEditProjet {
 
                     case 'add_grade':
                         $id_etudiant = $_POST['id_etudiant'];
-                        $id_groupe = $_POST['id_groupe'];
+                        $id_groupe = isset($_POST['id_groupe']) ? (int)$_POST['id_groupe'] : null;
                         $note = $_POST['note'];
                         $type_evaluation = $_POST['type_evaluation'];
                         $coef = $_POST['coef'];
@@ -128,7 +128,21 @@ class ContEditProjet {
                         $id_responsable = $_POST['id_responsable'];
                         $this->modele->removeResponsable($id_responsable);
                         break;
-                                        
+                    case 'accepter_demande':
+                       $id_demande = $_POST['id_demande'];
+                       $membres = explode(',', $_POST['membres']);
+                       $membres[] = $this->modele->getEtudiantIdParDemande($id_demande);
+                                    
+                       $nomGroupe = "Groupe " . uniqid();
+                       $this->modele->createGroup($id_projet, $nomGroupe);
+                       $id_groupe = $this->db->lastInsertId();
+                                    
+                       foreach ($membres as $id_etudiant) {
+                           $this->modele->addStudentToGroup($id_etudiant, $id_groupe);
+                       }
+                       
+                       $this->modele->supprimerDemande($id_demande);
+                       break;              
                     default:
                         break;
                 }
@@ -148,7 +162,7 @@ class ContEditProjet {
             $enseignants = $this->modele->getAllEnseignants($id_projet);
         }
 
-       $this->vue->afficherFormulaireEdition($projet, $ressources, $rendus, $soutenances, $groupes, $etudiants, $notes, $responsables, $enseignants);
+        $this->vue->afficherFormulaireEdition($projet, $ressources, $rendus, $soutenances, $groupes, $etudiants, $notes, $responsables, $enseignants, $demandes);
     }
 }
 ?>

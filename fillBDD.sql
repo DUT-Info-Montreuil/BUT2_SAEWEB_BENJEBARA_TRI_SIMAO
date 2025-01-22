@@ -6,7 +6,7 @@ INSERT INTO utilisateur (nom, prenom, email, mot_de_pass) VALUES
 ('Martin', 'Sophie', 'tom', 'aze'),
 ('Doe', 'John', 'prof2', 'aze'),
 ('Smith', 'Jane', 'prof3', 'aze'),
-('Dupont', 'Jean', 'jean.dupont@example.com', 'password789'),
+('Dupont', 'Jean', 'tom2', 'aze'),
 ('Martin', 'Sophie', 'sophie.martin@example.com', 'password101'),
 ('Lefevre', 'Pierre', 'pierre.lefevre@example.com', 'password112'),
 ('Moreau', 'Emilie', 'emilie.moreau@example.com', 'password1234'),
@@ -25,7 +25,7 @@ INSERT INTO semestre (id_semestre, type) VALUES
 
 -- Insertion des données dans la table Etudiant
 INSERT INTO etudiant (id_utilisateur, semestre_utilisateur) VALUES
-(2, 1), (6, 2), (7, 3), (8, 3), (9, 4), (10, 4);
+(2, 1), (6, 1), (7, 3), (8, 3), (9, 4), (10, 4);
 
 
 -- Insertion des données dans la table Annee

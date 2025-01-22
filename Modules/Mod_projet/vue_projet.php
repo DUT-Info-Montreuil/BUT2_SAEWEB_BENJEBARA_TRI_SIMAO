@@ -7,7 +7,7 @@ class VueProjet {
 
     public function __construct() {}
 
-    public function afficherProjet($projet, $ressources, $rendus, $soutenances, $groupes, $notes, $etudiantConnecte,$etudiants) {
+    public function afficherDetailsProjet($projet, $ressources, $rendus, $soutenances, $groupes, $isEnseignant, $notes, $etudiant, $etudiants, $etudiantsSansGroupe) {
         afficherHeader("Projet");
         ?>
         <!DOCTYPE html>
@@ -291,8 +291,32 @@ class VueProjet {
                         </div>
                     </div>
                 </div>
-
-                <div class="card" data-section-content="notes">
+                <?php if (!$etudiant['id_groupe']): ?>
+                    <div class="card">
+                        <div class="card-content">
+                            <h2 class="subtitle">Proposer un groupe</h2>
+                            <form method="post">
+                                <input type="hidden" name="action" value="envoyer_demande_groupe">
+                                <div class="field">
+                                    <label class="label">
+                                        Entrez les noms des étudiants (séparés par des virgules) :<br>
+                                        <small>Exemple: Jean Dupont, Marie Leroy</small>
+                                    </label>
+                                    <div class="control">
+                                        <textarea 
+                                            class="textarea" 
+                                            name="membres_noms" 
+                                            placeholder="Noms des étudiants" 
+                                            required
+                                        ></textarea>
+                                    </div>
+                                </div>
+                                <button type="submit" class="button is-primary">Envoyer la demande</button>
+                            </form>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                    <div class="card" data-section-content="notes">
                     <div class="card-content">
                         <h2 class="section-title toggle-section">
                             <span class="icon"><i class="fas fa-chevron-right"></i></span>

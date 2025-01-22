@@ -152,21 +152,28 @@ public function getStudentGrades($id_etudiant) {
 }
 
 public function addGrade($id_etudiant, $id_groupe, $note, $type_evaluation, $coef) {
+    if (!is_numeric($id_groupe) || $id_groupe <= 0) {
+        throw new InvalidArgumentException("Invalid group ID provided.");
+    }
+
     $query = "INSERT INTO evaluation (type, coef, est_individuel) VALUES (:type, :coef, TRUE)";
     $stmt = self::$bdd->prepare($query);
-    $stmt->bindParam(':type', $type_evaluation);
-    $stmt->bindParam(':coef', $coef);
-    $stmt->execute();
+    $stmt->execute([
+        ':type' => $type_evaluation,
+        ':coef' => $coef
+    ]);
 
     $id_evaluation = self::$bdd->lastInsertId();
 
-    $query = "INSERT INTO note (id_evaluation, id_etudiant, id_groupe, note) VALUES (:id_evaluation, :id_etudiant, :id_groupe, :note)";
+    $query = "INSERT INTO note (id_evaluation, id_etudiant, id_groupe, note) 
+              VALUES (:id_evaluation, :id_etudiant, :id_groupe, :note)";
     $stmt = self::$bdd->prepare($query);
-    $stmt->bindParam(':id_evaluation', $id_evaluation);
-    $stmt->bindParam(':id_etudiant', $id_etudiant);
-    $stmt->bindParam(':id_groupe', $id_groupe);
-    $stmt->bindParam(':note', $note);
-    $stmt->execute();
+    $stmt->execute([
+        ':id_evaluation' => $id_evaluation,
+        ':id_etudiant' => $id_etudiant,
+        ':id_groupe' => $id_groupe,
+        ':note' => $note
+    ]);
 }
 
 public function updateGrade($id_note, $new_grade) {
@@ -245,5 +252,28 @@ public function getAllEnseignants($id_projet = null) {
     $stmt->bindParam(':id_projet', $id_projet, PDO::PARAM_INT);
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+public function getDemandesGroupe($id_projet) {
+    $query = "SELECT d.*, u.nom, u.prenom 
+              FROM demande_groupe d
+              JOIN etudiant e ON d.id_etudiant = e.id_etudiant
+              JOIN utilisateur u ON e.id_utilisateur = u.id_utilisateur
+              WHERE d.id_projet = :id_projet";
+    $stmt = self::$bdd->prepare($query);
+    $stmt->bindParam(':id_projet', $id_projet, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+public function getEtudiantIdParDemande($id_demande) {
+    $query = "SELECT id_etudiant FROM demande_groupe WHERE id_demande = :id";
+    $stmt = self::$bdd->prepare($query);
+    $stmt->execute([':id' => $id_demande]);
+    return $stmt->fetchColumn();
+}
+
+public function supprimerDemande($id_demande) {
+    $query = "DELETE FROM demande_groupe WHERE id_demande = :id";
+    $stmt = self::$bdd->prepare($query);
+    $stmt->execute([':id' => $id_demande]);
 }
 }

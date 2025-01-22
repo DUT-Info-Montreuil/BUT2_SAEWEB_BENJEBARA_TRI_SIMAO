@@ -162,3 +162,14 @@ CREATE TABLE valeur_champ (
     id_champ INT,
     FOREIGN KEY (id_champ) REFERENCES champ(id_champ)
 );
+
+DROP TABLE IF EXISTS demande_groupe;
+CREATE TABLE demande_groupe (
+    id_demande INT PRIMARY KEY AUTO_INCREMENT,
+    id_projet INT NOT NULL,
+    id_etudiant INT NOT NULL,
+    membres_demandes TEXT NOT NULL,
+    date_demande TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_projet) REFERENCES projet(id_projet),
+    FOREIGN KEY (id_etudiant) REFERENCES etudiant(id_etudiant)
+);

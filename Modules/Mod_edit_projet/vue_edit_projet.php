@@ -7,7 +7,7 @@ class VueEditProjet {
 
     public function __construct() {}
 
-    public function afficherFormulaireEdition($projet, $ressources, $rendus, $soutenances, $groupes, $etudiants, $notes, $responsables, $enseignants) {
+    public function afficherFormulaireEdition($projet, $ressources, $rendus, $soutenances, $groupes, $etudiants, $notes, $responsables, $enseignants, $demandes = []) {
         afficherHeader("Liste des projets");
         ?>
         <!DOCTYPE html>
@@ -569,6 +569,38 @@ class VueEditProjet {
                             <div class="card">
                                 <div class="card-content">
                                     <h3 class="subtitle">Créer un nouveau groupe</h3>
+                                    <div class="card">
+                                        <div class="card-content">
+                                            <h3 class="subtitle">Demandes de groupe</h3>
+                                            <?php if (!empty($demandes)): ?>
+                                            <?php foreach ($demandes as $demande): ?>
+                                                <div class="box">
+                                                    <p><strong>Étudiant :</strong> <?= htmlspecialchars($demande['prenom'] . ' ' . $demande['nom']) ?></p>
+                                                    <p><strong>Membres demandés :</strong> 
+                                                        <?php 
+                                                        $membres = explode(',', $demande['membres_demandes']);
+                                                        $noms = [];
+                                                        foreach ($etudiants as $e) {
+                                                            if (in_array($e['id_etudiant'], $membres)) {
+                                                                $noms[] = $e['prenom_etudiant'] . ' ' . $e['nom_etudiant'];
+                                                            }
+                                                        }
+                                                        echo implode(', ', $noms);
+                                                        ?>
+                                                    </p>
+                                                    <form method="post" style="margin-top: 10px;">
+                                                        <input type="hidden" name="action" value="accepter_demande">
+                                                        <input type="hidden" name="id_demande" value="<?= $demande['id_demande'] ?>">
+                                                        <input type="hidden" name="membres" value="<?= $demande['membres_demandes'] ?>">
+                                                        <button type="submit" class="button is-small is-success">Accepter</button>
+                                                    </form>
+                                                </div>
+                                            <?php endforeach; ?>
+                                            <?php else: ?>
+                                            <p>Aucune demande de groupe pour ce projet</p>
+                                        <?php endif; ?>
+                                        </div>
+                                    </div>
                                     <form action="" method="post">
                                         <input type="hidden" name="action" value="create_group">
                                         <input type="hidden" name="id_projet" value="<?php echo $projet['id_projet']; ?>">
